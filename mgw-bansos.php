@@ -11,21 +11,36 @@
 * Text Domain : bansos-desa
 */
 
+// #########################################################################################
+
+// -------------------- [DEFINE ABSOLUTE PLUGIN ROOT PATH] --------------------
+// START
 define('MGW_CRUD_ABS_PATH', __DIR__);
+// END
+// -------------------- [DEFINE ABSOLUTE PLUGIN ROOT PATH] --------------------
+
+// -------------------- [ADD MENU ITEM (MAIN)] --------------------
+// START
 
 // Add a menu item to the admin dashboard
 function bantuan_desa_menu() {
   add_menu_page(
-      'Bantuan Sosial Desa', // page title
-      'KPM Bansos', // menu name
-      'manage_options', // capabilities
-      'mgw_bansos', // slug
+      'Bantuan Sosial Desa',      // page title
+      'KPM Bansos',               // menu name
+      'manage_options',           // capabilities @TODO : research this!
+      'mgw_bansos',               // slug
       'mgw_display_bansos_lists', // callback
-      'dashicons-heart', // sidebar menu icon
-      2 // menu place order
+      'dashicons-heart',          // sidebar menu icon
+      2                           // menu place order
   );
 }
 add_action('admin_menu', 'bantuan_desa_menu');
+
+// END
+// -------------------- [ADD MENU ITEM (MAIN)] --------------------
+
+// -------------------- [LINK MAIN BACKEND PAGE] --------------------
+// START
 
 // The callback function for your settings page
 function mgw_display_bansos_lists() {
@@ -33,12 +48,23 @@ function mgw_display_bansos_lists() {
   include plugin_dir_path(__FILE__) . 'templates/mgw-bansos-main.php';
 }
 
-// css
+// END
+// -------------------- [LINK MAIN BACKEND PAGE] --------------------
+
+// -------------------- [ADD MY CSS] --------------------
+// START
+
 // Enqueue styles
 function mgw_bansos_enqueue_styles() {
   wp_enqueue_style('mgw-bansos-styles', plugin_dir_url(__FILE__) . 'css/mgw-bansos-styles.css');
 }
 add_action('admin_enqueue_scripts', 'mgw_bansos_enqueue_styles');
+
+// END
+// -------------------- [ADD MY CSS] --------------------
+
+// -------------------- [ADD BOOTSTRAP, FONTAWESOME, AND MY JS] --------------------
+// START
 
 // Enqueue scripts and styles
 function mgw_bansos_enqueue_scripts() {
@@ -56,28 +82,43 @@ function mgw_bansos_enqueue_scripts() {
 }
 add_action('admin_enqueue_scripts', 'mgw_bansos_enqueue_scripts');
 
-// ----------------- [SUB MENU] -------------------
+// END
+// -------------------- [ADD BOOTSTRAP, FONTAWESOME, AND MY JS] --------------------
+
+// -------------------- [ADD SUB MENU WP ADMIN (TAMBAH KPM)] --------------------
+// START
 
 // Sub-menu
 function mgw_bansos_submenu_page() {
   add_submenu_page(
-      'mgw_bansos_bansos',   // Slug of the parent menu
-      'Tambah KPM Bansos',         // Page title
-      'Tambah KPM',              // Menu title
-      'manage_options',       // Capability required to access
+      'mgw_bansos_bansos',                  // Slug of the parent menu
+      'Tambah KPM Bansos',                  // Page title
+      'Tambah KPM',                         // Menu title
+      'manage_options',                     // Capability required to access
       'mgw-bansos-submenu-insert-new-item', // Menu slug
-      'mgw_bansos_submenu_insert_page' // Callback function for submenu page content
+      'mgw_bansos_submenu_insert_page'      // Callback function for submenu page content
   );
 }
 
 add_action('admin_menu', 'mgw_bansos_submenu_page');
+
+// END
+// -------------------- [ADD SUB MENU WP ADMIN (TAMBAH KPM)] --------------------
+
+// -------------------- [LINK SUB MENU BACKEND PAGE (TAMBAH KPM) ] --------------------
+// START
 
 // Callback function for submenu page content
 function mgw_bansos_submenu_insert_page() {
   include plugin_dir_path(__FILE__) . 'templates/mgw-bansos-insert.php';
 }
 
-// shortcode
+// END
+// -------------------- [LINK SUB MENU BACKEND PAGE (TAMBAH KPM) ] --------------------
+
+// -------------------- [SHORTCODE MAIN TABLE ] --------------------
+// START
+
 function mgw_bansos_table_shortcode() {
   // Include the database connection file
   global $wpdb;
@@ -146,3 +187,6 @@ function mgw_bansos_table_shortcode() {
 // Register the shortcode
 add_shortcode('mgw_bansos_table', 'mgw_bansos_table_shortcode');
 // [mgw_bansos_table]
+
+// END
+// -------------------- [SHORTCODE MAIN TABLE ] --------------------
