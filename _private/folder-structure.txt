@@ -1,0 +1,19 @@
+wp-content/plugins/
+
+root plugin :
+wp-content/plugins/mgw-bansos
+
+plugin main php file :
+wp-content/plugins/mgw-bansos.php
+
+plugin main menu "KPM Bansos" page on WP Admin Dashboard :
+wp-content/plugins/mgw-bansos/templates/mgw-bansos-main.php
+
+plugin sub menu "Tambah KPM" page on WP Admin Dashboard :
+wp-content/plugins/mgw-bansos/templates/mgw-bansos-insert.php
+
+plugin css file :
+wp-content/plugins/mgw-bansos/css/mgw-bansos-styles.css
+
+plugin js script file :
+wp-content/plugins/mgw-bansos/js/mgw-bansos-script.js
