@@ -22,49 +22,37 @@ $listBansos = $wpdb -> get_results ("SELECT * FROM $bansos_table");
 // INSERT LOGIC
 if ( isset($_POST["mgw-bansos-insert-button"]) ) {
   // ambil data dikirim dan simpan ke variabel
-  $submitted_nomor_kk = $_POST['mgw-bansos-insert-nomor_kk'];
-  $submitted_nik = $_POST['mgw-bansos-insert-nik'];
-  $submitted_nama = $_POST['mgw-bansos-insert-nama'];
-  $submitted_alamat = $_POST['mgw-bansos-insert-alamat'];
-  $submitted_bantuan = $_POST['mgw-bansos-insert-bantuan'];
+  $submitted_nomor_kk = sanitize_text_field($_POST['mgw-bansos-insert-nomor_kk']);
+  $submitted_nik = sanitize_text_field($_POST['mgw-bansos-insert-nik']);
+  $submitted_nama = sanitize_text_field($_POST['mgw-bansos-insert-nama']);
+  $submitted_alamat = sanitize_text_field($_POST['mgw-bansos-insert-alamat']);
+  $submitted_bantuan = sanitize_text_field($_POST['mgw-bansos-insert-bantuan']);
   // cek apakah nomor kk sudah terdaftar ?
   $existing_nomor_kk = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $keluarga_table WHERE nomor_kk = %s", $submitted_nomor_kk));
   // cek apakah nik sudah terdaftar ?
   $existing_nik = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $kpm_table WHERE nik = %s", $submitted_nik));
   
   if ($existing_nomor_kk > 0) {
-    // Nomor KK is already registered, handle the error
     $error = true;
-    // You can set an error message or take other actions
- } elseif ($existing_nik > 0) {
-    // NIK is already registered, handle the error
+  } elseif ($existing_nik > 0) {
     $error = true;
-    // You can set an error message or take other actions
- } else {
+  } else {
     // Nomor KK and NIK are not registered, proceed with the insertion
-    // Perform the actual database insertion here
-    // Prepare data for insertion
+    
     $insertKeluarga = array (
       'nomor_kk' => $submitted_nomor_kk,
       'nama_kk' => $submitted_nama
     );
-
     $wpdb->insert($keluarga_table, $insertKeluarga);
-
+    $submitted_kk_id = $wpdb->get_var($wpdb->prepare("SELECT kk_id FROM $keluarga_table WHERE nomor_kk = %s", $submitted_nomor_kk));
     
-
-
     $insertKPM = array(
-      'nomor_kk' => $submitted_nomor_kk,
+      'kk_id' => $submitted_kk_id,
       'nik' => $submitted_nik,
       'nama' => $submitted_nama,
       'banjar_id' => $_POST['mgw-bansos-insert-alamat'], // Assuming 'mgw-bansos-insert-alamat' contains banjar_id
       'bansos_id' => $submitted_bantuan
     );
-
-    // Format of the data (column names) should match your database table structure
-
-    // Insert data into the main table
     $wpdb->insert($kpm_table, $insertKPM);
 
     // Redirect or display success message, as needed
@@ -73,8 +61,6 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
 
  }
 }
-
-
 
 ?>
 <!-- INSERT CONTENT -->
