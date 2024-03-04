@@ -16,66 +16,92 @@ $query = "SELECT
           ";
 
 $kpmTerdaftar = $wpdb -> get_results ($query);
+$listBanjar = $wpdb -> get_results ("SELECT * FROM $banjar_table");
+$listBansos = $wpdb -> get_results ("SELECT * FROM $bansos_table");
 
-$error = false;
-$passed = false;
-
-if (isset($_POST["verifyBtn"])) {
-  foreach ($kpmTerdaftar as $kpm) {
-    if ( $_POST["verifyNIK"] == $kpm -> nik ) {
-      $error = true;
-      break;
-    }
-  }
+// INSERT LOGIC
+if ( isset($_POST["mgw-bansos-insert-button"]) ) {
+  // ambil data dikirim dan simpan ke variabel
+  // cek apakah nomor kk sudah terdaftar ?
+  // cek apakah nik sudah terdaftar ?
+  // cek bantuan
 }
-
-if (!$error) {
-  $passed = true;
-}
-
 
 ?>
-
-
 <!-- INSERT CONTENT -->
-<div class="wrap">
-  <div class="mb-3">
-    <h2>Tambah KPM</h2>
-  </div>
+<div class="container-fluid" style="width: 50%; float: left;">
+  <h2>Tambah KPM</h2>
   <form action="" method="post">
-    <div class="mb-1">
-      <label for="verifyNIK">Cek NIK</label>
+    <div class="row">
+      <div class="col">
+        <!-- Insert Nomor KK -->
+        <div class="mb-3">
+          <label for="mgw-bansos-insert-nomor_kk" class="form-label">Nomor KK</label>
+          <input type="text" class="form-control" name="mgw-bansos-insert-nomor_kk" id="mgw-bansos-insert-nomor_kk">
+        </div>
+      </div>
+      <div class="col">
+        <!-- Insert NIK -->
+        <div class="mb-3">
+          <label for="mgw-bansos-insert-nik" class="form-label">Nomor Induk Kependudukan (NIK)</label>
+          <input type="text" class="form-control" name="mgw-bansos-insert-nik" id="mgw-bansos-insert-nik">
+        </div>
+      </div>
     </div>
-    <div class="mb-1">
-      <input type="text" name="verifyNIK" id="verifyNIK">
+    <!-- Insert Nomor KK -->
+    <div class="mb-3">
+      <label for="mgw-bansos-insert-nama" class="form-label">Nama</label>
+      <input type="text" class="form-control" name="mgw-bansos-insert-nama" id="mgw-bansos-insert-nama">
     </div>
-    <button class="btn btn-primary" type="submit" name="verifyBtn">Cek NIK</button>
+    <!-- Insert Alamat -->
+    <div class="mb-3">
+      <label for="mgw-bansos-insert-alamat" class="form-label">Alamat</label>
+      <table>
+        <tr class="row">
+          <td class="col">
+            <label class="form-label">Banjar</label>
+            <select class="form-select" aria-label="Default select example" name="mgw-bansos-insert-alamat" id="mgw-bansos-insert-alamat">
+              <option selected>- Pilih Banjar -</option>
+              <?php foreach ($listBanjar as $banjar) : ?>
+              <option value="<?= $banjar -> banjar_id; ?>" name="mgw-bansos-insert-alamat" ><?= $banjar -> banjar; ?></option>
+              <?php endforeach ?>
+            </select>
+          </td>
+          <td class="col">
+            <label class="form-label">Desa</label>
+            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Mengwi">
+          </td>
+          <td class="col">
+            <label class="form-label">Kecamatan</label>
+            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Mengwi">
+          </td>
+          <td class="col">
+            <label class="form-label">Kabupaten</label>
+            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Badung">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- Insert Bansos -->
+    <div class="mb-3">
+      <label for="mgw-bansos-insert-bantuan" class="form-label">Bantuan Didaftarkan</label>
+      <select class="form-select" aria-label="Default select example" name="mgw-bansos-insert-bantuan" id="mgw-bansos-insert-bantuan">
+        <option selected>- Pilih Bantuan -</option>
+        <?php foreach ($listBansos as $bansos) : ?>
+          <option value="<?= $bansos -> bansos_id ?>" name="mgw-bansos-insert-bantuan" > <?= $bansos -> bansos ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+    <!-- submit button -->
+    <button type="submit" name="mgw-bansos-insert-button" class="btn btn-primary">Tambah</button>
   </form>
+
 </div>
 
-<!-- Bootstrap Modal for Error -->
-<!-- Modal -->
-<div class="modal fade" id="errorKpm" tabindex="-1" aria-labelledby="errorKpmLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="errorKpm">Sudah Terdaftar</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        NIK sudah terdaftar!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mengerti</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php if ($error) : ?>
+<?php if (isset($error) && $error == true) : ?>
   <script>
+
     // Show the Bootstrap modal if an error occurs
-    
     jQuery(document).ready(function ($) {
       // Your jQuery code here
       $('#errorKpm').modal('show');

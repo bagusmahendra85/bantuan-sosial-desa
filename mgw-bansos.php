@@ -27,7 +27,7 @@ function bantuan_desa_menu() {
   add_menu_page(
       'Bantuan Sosial Desa',      // page title
       'KPM Bansos',               // menu name
-      'manage_options',           // capabilities @TODO : research this!
+      'edit_posts',               // capabilities @TODO : research this!
       'mgw_bansos',               // slug
       'mgw_display_bansos_lists', // callback
       'dashicons-heart',          // sidebar menu icon
@@ -89,14 +89,15 @@ add_action('admin_enqueue_scripts', 'mgw_bansos_enqueue_scripts');
 // START
 
 // Sub-menu
+// Add sub-menu using add_submenu_page
 function mgw_bansos_submenu_page() {
   add_submenu_page(
-      'mgw_bansos_bansos',                  // Slug of the parent menu
-      'Tambah KPM Bansos',                  // Page title
-      'Tambah KPM',                         // Menu title
-      'manage_options',                     // Capability required to access
-      'mgw-bansos-submenu-insert-new-item', // Menu slug
-      'mgw_bansos_submenu_insert_page'      // Callback function for submenu page content
+      'mgw_bansos',  // Parent slug
+      'Tambah KPM Bansos',
+      'Tambah KPM',
+      'edit_posts',
+      'mgw-bansos-submenu-insert-new-item',
+      'mgw_bansos_submenu_insert_page'
   );
 }
 

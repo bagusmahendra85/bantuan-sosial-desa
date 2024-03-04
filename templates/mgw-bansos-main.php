@@ -26,8 +26,9 @@ $sql_query = "
 $results = $wpdb->get_results($sql_query);
 
 
-
 ?>
+
+
 
 <!-- front -->
 <div class="wrap">
