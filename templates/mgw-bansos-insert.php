@@ -37,6 +37,7 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
   } elseif ($existing_nik > 0) {
     $error = true;
   } else {
+
     // Nomor KK and NIK are not registered, proceed with the insertion
     
     $insertKeluarga = array (
@@ -54,6 +55,7 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
       'bansos_id' => $submitted_bantuan
     );
     $wpdb->insert($kpm_table, $insertKPM);
+    return $insertSuccess = true;
 
     // Redirect or display success message, as needed
     // wp_redirect( 'URL_TO_REDIRECT_TO' );
@@ -133,16 +135,59 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
 
 </div>
 
+<!-- Insertion Success Modal -->
+<div class="modal fade" id="insertionSuccessModal" tabindex="-1" aria-labelledby="insertionSuccessModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="insertionSuccessModalLabel">Sukses Tambah Data</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Data berhasil ditambahkan
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mengerti</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php if (isset($insertSuccess) && $insertSuccess == true) : ?>
+  <script>
+
+    // Show the Bootstrap modal if an error occurs
+    jQuery(document).ready(function ($) {
+      // Your jQuery code here
+      $('#insertionSuccessModal').modal('show');
+    });
+  </script>
+<?php endif; ?>
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="errorModalLabel">Gagal</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Data gagal ditambahkan!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Mengerti</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php if (isset($error) && $error == true) : ?>
   <script>
 
     // Show the Bootstrap modal if an error occurs
     jQuery(document).ready(function ($) {
       // Your jQuery code here
-      $('#errorKpm').modal('show');
+      $('#errorModal').modal('show');
     });
   </script>
 <?php endif; ?>
-
-
 <!-- INSERT CONTENT END-->

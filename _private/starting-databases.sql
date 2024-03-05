@@ -75,7 +75,7 @@ wp_mgw_keluarga.nomor_kk AS Nomor_KK,
 wp_mgw_kpm_bansos.nik AS Nomor_Induk_Kependudukan,
 wp_mgw_kpm_bansos.nama AS Nama_Nasabah,
 CONCAT( 'Br. ', wp_mgw_ref_banjar.banjar, ', Mengwi' ) AS Alamat,
-wp_mgw_ref_bansos.bansos AS bansos
+wp_mgw_ref_bansos.bansos AS Bantuan
 FROM wp_mgw_kpm_bansos
 JOIN wp_mgw_keluarga USING (kk_id)
 JOIN wp_mgw_ref_banjar USING (banjar_id)
