@@ -24,14 +24,25 @@ define('MGW_CRUD_ABS_PATH', __DIR__);
 
 // Add a menu item to the admin dashboard
 function bantuan_desa_menu() {
+  // Add a top-level menu without sidebar icon
   add_menu_page(
-      'Bantuan Sosial Desa',      // page title
-      'KPM Bansos',               // menu name
-      'edit_posts',               // capabilities @TODO : research this!
-      'mgw_bansos',               // slug
-      'mgw_display_bansos_lists', // callback
-      'dashicons-heart',          // sidebar menu icon
-      2                           // menu place order
+    'Bansos Desa',              // page title
+    'Bansos Desa',              // menu name (this will be the plugin name in the sidebar)
+    'edit_posts',               // capabilities
+    'mgw_bansos',               // slug
+    'mgw_display_bansos_lists', // callback
+    '',                         // sidebar icon (empty to hide icon)
+    2                           // menu place order
+  );
+
+  // Add the first submenu item with the desired icon and name
+  add_submenu_page(
+    'mgw_bansos',               // parent slug
+    'Keluarga Penerima Manfaat',              // page title
+    'Semua KPM',              // menu name
+    'edit_posts',               // capabilities
+    'mgw_bansos',               // slug
+    'mgw_display_bansos_lists'  // callback
   );
 }
 add_action('admin_menu', 'bantuan_desa_menu');
