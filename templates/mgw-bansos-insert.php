@@ -32,14 +32,14 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
   // cek apakah nik sudah terdaftar ?
   $existing_nik = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $kpm_table WHERE nik = %s", $submitted_nik));
   
-  if ($existing_nomor_kk > 0) {
+  if ($existing_nomor_kk > 0 || $existing_nik > 0 )
+  {
     $error = true;
-  } elseif ($existing_nik > 0) {
-    $error = true;
-  } else {
-
+    $error_message = 'Data gagal ditambahkan! Nomor KK / NIK Sudah Terdaftar!';
+  } 
+  else 
+  {
     // Nomor KK and NIK are not registered, proceed with the insertion
-    
     $insertKeluarga = array (
       'nomor_kk' => $submitted_nomor_kk,
       'nama_kk' => $submitted_nama
@@ -55,26 +55,43 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
       'bansos_id' => $submitted_bantuan
     );
     $wpdb->insert($kpm_table, $insertKPM);
-    return $insertSuccess = true;
-
-    // Redirect or display success message, as needed
-    // wp_redirect( 'URL_TO_REDIRECT_TO' );
-    // exit;
-
- }
+    $insertSuccess = true;
+    $success_message = 'Data berhasil ditambahkan.';
+  }
 }
 
 ?>
 <!-- INSERT CONTENT -->
-<div class="container-fluid" style="width: 50%; float: left;">
+
+
+<div class="container-fluid bg-light m-3 p-3 rounded" style="width: 50%; float: left;">
+  <!-- INSERTION SUCCESS MESSAGE -->
+  <?php if (!empty($success_message)) : ?>
+      <div class="alert alert-success alert-dismissible fw-bold" role="alert">
+        <div><?php echo esc_html($success_message); ?></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+  <?php endif; ?>
+
+  <!-- INSERTION FAIL MESSAGE -->
+  <?php if (!empty($error_message)) : ?>
+    <div class="alert alert-danger alert-dismissible fw-bold" role="alert">
+      <?php echo esc_html($error_message); ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
+
   <h2>Tambah KPM</h2>
-  <form action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" method="post">
+  <form class="x-was-validated" action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>" method="post">
     <div class="row">
       <div class="col">
         <!-- Insert Nomor KK -->
         <div class="mb-3">
           <label for="mgw-bansos-insert-nomor_kk" class="form-label">Nomor KK</label>
-          <input type="text" class="form-control" name="mgw-bansos-insert-nomor_kk" id="mgw-bansos-insert-nomor_kk">
+          <input type="text" class="form-control" name="mgw-bansos-insert-nomor_kk" id="mgw-bansos-insert-nomor_kk" required>
+          <div class="invalid-feedback">
+            Wajib mengisi Nomor KK (16 Digit Angka)!
+          </div>
         </div>
       </div>
       <div class="col">
@@ -82,13 +99,19 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
         <div class="mb-3">
           <label for="mgw-bansos-insert-nik" class="form-label">Nomor Induk Kependudukan (NIK)</label>
           <input type="text" class="form-control" name="mgw-bansos-insert-nik" id="mgw-bansos-insert-nik">
+          <div class="invalid-feedback">
+            Wajib mengisi NIK (16 Digit Angka)!
+          </div>
         </div>
       </div>
     </div>
-    <!-- Insert Nomor KK -->
+    <!-- Insert Nama -->
     <div class="mb-3">
       <label for="mgw-bansos-insert-nama" class="form-label">Nama</label>
       <input type="text" class="form-control" name="mgw-bansos-insert-nama" id="mgw-bansos-insert-nama">
+      <div class="invalid-feedback">
+        Wajib mengisi Nama!
+      </div>
     </div>
     <!-- Insert Alamat -->
     <div class="mb-3">
@@ -103,18 +126,21 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
               <option value="<?= $banjar -> banjar_id; ?>" name="mgw-bansos-insert-alamat" ><?= $banjar -> banjar; ?></option>
               <?php endforeach ?>
             </select>
+            <div class="invalid-feedback">
+              Wajib memilih Banjar !
+            </div>
           </td>
           <td class="col">
             <label class="form-label">Desa</label>
-            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Mengwi">
+            <input type="text" id="disabledTextInput" class="form-control" readonly placeholder="Mengwi">
           </td>
           <td class="col">
             <label class="form-label">Kecamatan</label>
-            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Mengwi">
+            <input type="text" id="disabledTextInput" class="form-control" readonly placeholder="Mengwi">
           </td>
           <td class="col">
             <label class="form-label">Kabupaten</label>
-            <input type="text" id="disabledTextInput" class="form-control" disabled placeholder="Badung">
+            <input type="text" id="disabledTextInput" class="form-control" readonly placeholder="Badung">
           </td>
         </tr>
       </table>
@@ -128,6 +154,9 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
           <option value="<?= $bansos -> bansos_id ?>" name="mgw-bansos-insert-bantuan" > <?= $bansos -> bansos ?></option>
         <?php endforeach; ?>
       </select>
+      <div class="invalid-feedback">
+        Wajib memilih Bantuan yang akan didaftarkan !
+      </div>
     </div>
     <!-- submit button -->
     <button type="submit" name="mgw-bansos-insert-button" class="btn btn-primary">Tambah</button>
@@ -135,59 +164,5 @@ if ( isset($_POST["mgw-bansos-insert-button"]) ) {
 
 </div>
 
-<!-- Insertion Success Modal -->
-<div class="modal fade" id="insertionSuccessModal" tabindex="-1" aria-labelledby="insertionSuccessModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="insertionSuccessModalLabel">Sukses Tambah Data</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Data berhasil ditambahkan
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mengerti</button>
-      </div>
-    </div>
-  </div>
-</div>
-<?php if (isset($insertSuccess) && $insertSuccess == true) : ?>
-  <script>
 
-    // Show the Bootstrap modal if an error occurs
-    jQuery(document).ready(function ($) {
-      // Your jQuery code here
-      $('#insertionSuccessModal').modal('show');
-    });
-  </script>
-<?php endif; ?>
-<!-- Error Modal -->
-<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="errorModalLabel">Gagal</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Data gagal ditambahkan!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Mengerti</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<?php if (isset($error) && $error == true) : ?>
-  <script>
-
-    // Show the Bootstrap modal if an error occurs
-    jQuery(document).ready(function ($) {
-      // Your jQuery code here
-      $('#errorModal').modal('show');
-    });
-  </script>
-<?php endif; ?>
 <!-- INSERT CONTENT END-->

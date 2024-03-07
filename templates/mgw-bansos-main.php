@@ -23,8 +23,7 @@ $sql_query = "
     ORDER BY $bansos_table.bansos_id;
 ";
 
-$results = $wpdb->get_results($sql_query);
-
+$kpm_lists = $wpdb->get_results($sql_query);
 
 ?>
 
@@ -34,7 +33,7 @@ $results = $wpdb->get_results($sql_query);
 <div class="wrap">
     <h2> KPM Bansos Desa Mengwi</h2>
     <p>Daftar Keluarga Penerima Manfaat Bantuan Sosial di Desa Mengwi</p>
-    <table class="table">
+    <table class="table table-striped table-bordered bg-light">
       <thead>
         <tr>
           <th scope="col">No</th>
@@ -48,21 +47,30 @@ $results = $wpdb->get_results($sql_query);
       <tbody>
         <?php 
         $i = 1;
-        foreach ($results as $result) : 
+        foreach ($kpm_lists as $kpm_list) : 
         ?>
         <tr>
           <th scope="row"><?= $i++ ?></th>
-          <td><?= $result -> nomor_kk; ?></td>
-          <td><?= $result -> nik; ?></td>
-          <td><?= $result -> nama; ?></td>
-          <td><?= $result -> banjar; ?></td>
-          <td><?= $result -> bansos; ?></td>
+          <td><?= $kpm_list -> nomor_kk; ?></td>
+          <td><?= $kpm_list -> nik; ?></td>
+          <td><?= $kpm_list -> nama; ?></td>
+          <td><?= $kpm_list -> banjar; ?></td>
+          <td><?= $kpm_list -> bansos; ?></td>
         </tr>
         <?php endforeach ?>
         
       </tbody>
+      <thead>
+        <tr>
+          <th scope="col">No</th>
+          <th scope="col">Nomor KK</th>
+          <th scope="col">NIK</th>
+          <th scope="col">Nama Nasabah</th>
+          <th scope="col">Alamat</th>
+          <th scope="col">Bansos</th>
+        </tr>
+      </thead>
     </table>
 </div>
-
 
 <link rel="stylesheet" href="<?php echo plugin_dir_url(__FILE__) . 'css/mgw-crud-styles.css'; ?>">

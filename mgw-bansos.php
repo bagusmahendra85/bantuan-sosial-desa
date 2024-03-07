@@ -57,6 +57,7 @@ add_action('admin_menu', 'bantuan_desa_menu');
 function mgw_display_bansos_lists() {
   // Include the template file
   include plugin_dir_path(__FILE__) . 'templates/mgw-bansos-main.php';
+ 
 }
 
 // END
